@@ -1,0 +1,50 @@
+project: "chess-grpo"
+name: "wandb-temp"
+puzzle_batch_size: 1 ## 퍼즐 데이터 배치 묶음
+
+training:
+  model_name: "unsloth/Qwen3-8B"
+  output_dir: "./results_chess_grpo_traj"
+  learning_rate: !!float 3e-6
+  num_train_epochs: 250
+  rollout_batch_size: 6 # num generations 이랑 일치 시키기
+  num_generations: 6
+  grad_accum_steps: 1 # puzzle batch size를 n배 뻥튀기
+  test_num_trajectories_k: 3
+  beta: 0.0001
+  max_prompt_len: 1200
+  max_completion_len: 300
+  max_new_tokens: 300
+  use_lora: True
+  data_path: "data/1_puzzles_in_pgn_san_split_add_nl.json"
+  max_seq_length: 2300
+  load_in_4bit: True
+  dtype: "bfloat16"
+  gradient_checkpointing: True
+  seed: 42
+  memory_optimization:
+    clear_cache_every_n_steps: 5
+    force_gc_every_n_steps: 10
+    max_concurrent_trajectories: 1 ## 퍼즐 데이터 배치를 이 값 크기의 미니배치로 분할
+  lora_params:
+    r: 16
+    lora_alpha: 32
+    target_modules: ["q_proj", "v_proj", "k_proj", "o_proj", "gate_proj", "up_proj", "down_proj"]
+    lora_dropout: 0.05
+    bias: "none"
+
+reward:
+  format_pass_base_reward: 0.1
+  move_correct_base_reward: 1.0
+  move_incorrect_base_penalty: -0.5
+  correct_streak_multiplier: 1.0
+  incorrect_streak_multiplier: 1.0
+  check_uci: false
+  reward_uci_format_correct: 0.1
+  trajectory_completion_reward: 1.0
+  trajectory_failure_penalty: -1.0
+  partial_move_from_reward: 0.15
+  partial_move_to_reward: 0.12
+  partial_move_file_reward: 0.012
+  partial_move_rank_reward: 0.012
+  legal_move_reward: 0.15

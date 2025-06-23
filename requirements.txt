@@ -1,0 +1,12 @@
+torch>=2.0.0
+transformers>=4.51.3
+datasets
+accelerate
+peft
+trl
+python-chess
+regex
+pyyaml
+wandb
+python-dotenv
+unsloth
