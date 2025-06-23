@@ -1,5 +1,3 @@
-# ♟️ CoTChess ♟️
-
 <p align="center">
   <img src="AlphaChess.png" alt="AlphaChess Project Banner" width="600"/>
 </p>
